@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.miq3l.battleshipgame.service.BoardGameService;
+import pl.miq3l.battleshipgame.service.BattleShipService;
 
 @RestController
 @RequestMapping("/api/battleship")
-public class BoardGameApi {
+public class BattleShipApi {
 
-    private final BoardGameService boardGameService;
+    private final BattleShipService boardGameService;
 
     @Autowired
-    public BoardGameApi(BoardGameService boardGameService) {
+    public BattleShipApi(BattleShipService boardGameService) {
         this.boardGameService = boardGameService;
     }
 

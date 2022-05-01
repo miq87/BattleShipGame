@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service;
 import pl.miq3l.battleshipgame.BoardGame;
 
 @Service
-public class BoardGameService {
+public class BattleShipService {
 
     private final BoardGame boardGame;
 
-    public BoardGameService() {
+    public BattleShipService() {
         this.boardGame = BoardGame.getInstance();
     }
 
