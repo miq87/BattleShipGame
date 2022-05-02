@@ -35,35 +35,69 @@ public class BoardGame {
 
     public int[][] generateShips() {
         resetBoardGame();
+        ships.clear();
         int numberOfShips = 3;
 
-        generateSingleShip(5);
-        numberOfShips--;
-        for(int i = 0; i < numberOfShips; i++) {
-            generateSingleShip(4);
+        while(numberOfShips > 2) {
+            if(generateSingleShip(5))
+                numberOfShips--;
+        }
+        while(numberOfShips > 0) {
+            if(generateSingleShip(4))
+                numberOfShips--;
         }
         return boardGame;
     }
 
+    private void saveShipToBoardGame(Ship ship) {
+        ship.getCoordinates().forEach(coordinate -> {
+            this.boardGame[coordinate.getRow()][coordinate.getCol()]
+                    = StatusEnum.SHIP.getValue();
+        });
+    }
+
     public boolean generateSingleShip(int shipSize) {
         Ship ship = new Ship();
-        if(new Random().nextBoolean()) {
+        if(new Random().nextBoolean()) {    // HORIZONTAL SHIP
             int col = new Random().nextInt(BOARDSIZE / 2);
             int row = new Random().nextInt(BOARDSIZE);
-            for(int y = 0; y < shipSize; y++) {
-                if(this.boardGame[row][col+y] == StatusEnum.SEA.getValue())
-                    ship.getCoordinatesList().add(new Coordinates(row, col+y));
+            for(int i = 0; i < shipSize; i++) {
+                try {
+                    if(boardGame[row-1][col+i] == StatusEnum.SEA.getValue() &&
+                            boardGame[row][col+i-1] == StatusEnum.SEA.getValue() &&
+                            boardGame[row][col+i+1] == StatusEnum.SEA.getValue() &&
+                            boardGame[row][col+i] == StatusEnum.SEA.getValue() &&
+                            boardGame[row+1][col+i] == StatusEnum.SEA.getValue()) {
+                        ship.getCoordinates().add(new Coordinates(row, col+i));
+                    }
+                    else return false;
+                }
+                catch (Exception e) {
+                    return false;
+                }
             }
-            return true;
         }
-        int col = new Random().nextInt(BOARDSIZE);
-        int row = new Random().nextInt(BOARDSIZE / 2);
-        for(int y = 0; y < shipSize; y++) {
-            if(this.boardGame[row+y][col] == StatusEnum.SEA.getValue())
-                ship.getCoordinatesList().add(new Coordinates(row+y, col));
+        else {  // VERTICAL SHIP
+            int col = new Random().nextInt(BOARDSIZE);
+            int row = new Random().nextInt(BOARDSIZE / 2);
+            for(int i = 0; i < shipSize; i++) {
+                try {
+                    if(boardGame[row+i][col-1] == StatusEnum.SEA.getValue() &&
+                            boardGame[row+i-1][col] == StatusEnum.SEA.getValue() &&
+                            boardGame[row+i][col] == StatusEnum.SEA.getValue() &&
+                            boardGame[row+i+1][col] == StatusEnum.SEA.getValue() &&
+                            boardGame[row+i][col+1] == StatusEnum.SEA.getValue()) {
+                        ship.getCoordinates().add(new Coordinates(row+i, col));
+                    }
+                    else return false;
+                }
+                catch (Exception e) {
+                    return false;
+                }
+            }
         }
         ships.add(ship);
-        System.out.println(ship);
+        saveShipToBoardGame(ship);
         return true;
     }
 

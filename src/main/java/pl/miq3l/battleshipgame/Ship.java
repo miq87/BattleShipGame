@@ -11,13 +11,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 class Coordinates {
-    int col;
-    int row;
+    private int row;
+    private int col;
 }
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ship {
-    List<Coordinates> coordinatesList = new ArrayList<>();
+    private List<Coordinates> coordinates = new ArrayList<>();
 }
