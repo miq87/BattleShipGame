@@ -38,7 +38,7 @@ public class BoardGame {
         ships.clear();
         int numberOfShips = 3;
 
-        while(numberOfShips > 2) {
+        while(numberOfShips == 3) {
             if(generateSingleShip(5))
                 numberOfShips--;
         }
@@ -63,18 +63,17 @@ public class BoardGame {
             int row = new Random().nextInt(BOARDSIZE);
             for(int i = 0; i < shipSize; i++) {
                 try {
-                    if(boardGame[row-1][col+i] == StatusEnum.SEA.getValue() &&
-                            boardGame[row][col+i-1] == StatusEnum.SEA.getValue() &&
-                            boardGame[row][col+i+1] == StatusEnum.SEA.getValue() &&
-                            boardGame[row][col+i] == StatusEnum.SEA.getValue() &&
-                            boardGame[row+1][col+i] == StatusEnum.SEA.getValue()) {
-                        ship.getCoordinates().add(new Coordinates(row, col+i));
+                    for(int x = -1; x < 2; x++) {
+                        for(int y = -1; y < 2; y++) {
+                            if(boardGame[row+x][col+i+y] != StatusEnum.SEA.getValue())
+                                return false;
+                        }
                     }
-                    else return false;
                 }
                 catch (Exception e) {
                     return false;
                 }
+                ship.getCoordinates().add(new Coordinates(row, col+i));
             }
         }
         else {  // VERTICAL SHIP
@@ -82,18 +81,17 @@ public class BoardGame {
             int row = new Random().nextInt(BOARDSIZE / 2);
             for(int i = 0; i < shipSize; i++) {
                 try {
-                    if(boardGame[row+i][col-1] == StatusEnum.SEA.getValue() &&
-                            boardGame[row+i-1][col] == StatusEnum.SEA.getValue() &&
-                            boardGame[row+i][col] == StatusEnum.SEA.getValue() &&
-                            boardGame[row+i+1][col] == StatusEnum.SEA.getValue() &&
-                            boardGame[row+i][col+1] == StatusEnum.SEA.getValue()) {
-                        ship.getCoordinates().add(new Coordinates(row+i, col));
+                    for(int x = -1; x < 2; x++) {
+                        for(int y = -1; y < 2; y++) {
+                            if(boardGame[row+i+x][col+y] != StatusEnum.SEA.getValue())
+                                return false;
+                        }
                     }
-                    else return false;
                 }
                 catch (Exception e) {
                     return false;
                 }
+                ship.getCoordinates().add(new Coordinates(row+i, col));
             }
         }
         ships.add(ship);
