@@ -1,5 +1,9 @@
 package pl.miq3l.battleshipgame;
 
+import pl.miq3l.battleshipgame.model.Coordinates;
+import pl.miq3l.battleshipgame.model.Ship;
+import pl.miq3l.battleshipgame.model.StatusEnum;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,7 +103,9 @@ public class BoardGame {
         return true;
     }
 
-    public int[][] hit(int row, int col) {
+    public int[][] hit(Coordinates coordinates) {
+        int row = coordinates.getRow();
+        int col = coordinates.getCol();
         if(boardGame[row][col] == 1) {
             boardGame[row][col] = StatusEnum.HITTED.getValue();
         }

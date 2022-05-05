@@ -2,6 +2,7 @@ package pl.miq3l.battleshipgame.service;
 
 import org.springframework.stereotype.Service;
 import pl.miq3l.battleshipgame.BoardGame;
+import pl.miq3l.battleshipgame.model.Coordinates;
 
 @Service
 public class BattleShipService {
@@ -24,7 +25,7 @@ public class BattleShipService {
         return boardGame.generateShips();
     }
 
-    public int[][] hit(int row, int col) {
-        return boardGame.hit(row, col);
+    public int[][] hit(Coordinates coordinates) {
+        return boardGame.hit(coordinates);
     }
 }

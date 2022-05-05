@@ -1,4 +1,4 @@
-package pl.miq3l.battleshipgame;
+package pl.miq3l.battleshipgame.model;
 
 public enum StatusEnum {
     SEA(0),

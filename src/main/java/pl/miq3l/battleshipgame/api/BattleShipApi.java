@@ -1,10 +1,8 @@
 package pl.miq3l.battleshipgame.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.miq3l.battleshipgame.model.Coordinates;
 import pl.miq3l.battleshipgame.service.BattleShipService;
 
 @RestController
@@ -33,9 +31,9 @@ public class BattleShipApi {
         return boardGameService.generateShips();
     }
 
-    @GetMapping("/hit/{row}/{col}")
-    public int[][] hit(@PathVariable int row, @PathVariable int col) {
-        return boardGameService.hit(row, col);
+    @PostMapping("/hit")
+    public int[][] hit(@RequestBody Coordinates coordinates) {
+        return boardGameService.hit(coordinates);
     }
 
 }
