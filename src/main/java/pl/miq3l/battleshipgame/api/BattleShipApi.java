@@ -2,6 +2,7 @@ package pl.miq3l.battleshipgame.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.miq3l.battleshipgame.model.BoardGame;
 import pl.miq3l.battleshipgame.model.Coordinates;
 import pl.miq3l.battleshipgame.service.BattleShipService;
 
@@ -17,22 +18,22 @@ public class BattleShipApi {
     }
 
     @GetMapping
-    public int[][] getBoardGame() {
+    public BoardGame getBoardGame() {
         return boardGameService.getBoardGame();
     }
 
     @GetMapping("/reset")
-    public int[][] resetBoardGame() {
+    public BoardGame resetBoardGame() {
         return boardGameService.resetBoardGame();
     }
 
     @GetMapping("/generate")
-    public int[][] generateShips() {
+    public BoardGame generateShips() {
         return boardGameService.generateShips();
     }
 
     @PostMapping("/hit")
-    public int[][] hit(@RequestBody Coordinates coordinates) {
+    public BoardGame hit(@RequestBody Coordinates coordinates) {
         return boardGameService.hit(coordinates);
     }
 

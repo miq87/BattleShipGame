@@ -1,42 +1,43 @@
 package pl.miq3l.battleshipgame;
 
+import pl.miq3l.battleshipgame.model.BoardGame;
 import pl.miq3l.battleshipgame.model.Coordinates;
 import pl.miq3l.battleshipgame.model.Ship;
 import pl.miq3l.battleshipgame.model.SquareStatus;
 
 import java.util.*;
 
-public class BoardGame {
-    private final int[][] boardGame;
-    private static BoardGame INSTANCE;
-    private static final int BOARDSIZE = 10;
-    private final List<Ship> ships = new ArrayList<>();
+public class BattleShip {
 
-    public int[][] getBoardGame() {
+    private final BoardGame boardGame;
+    private static BattleShip INSTANCE;
+    private static final int BOARDSIZE = 10;
+
+    public BoardGame getBoardGame() {
         return boardGame;
     }
 
-    public static BoardGame getInstance() {
+    public static BattleShip getInstance() {
         if(INSTANCE == null) {
-            INSTANCE = new BoardGame(BOARDSIZE);
+            INSTANCE = new BattleShip(BOARDSIZE);
         }
         return INSTANCE;
     }
 
-    private BoardGame(int size) {
-        this.boardGame = new int[size][size];
+    private BattleShip(int size) {
+        this.boardGame = new BoardGame(BOARDSIZE);
     }
 
-    public int[][] resetBoardGame() {
-        Arrays.stream(boardGame).forEach(a -> {
+    public BoardGame resetBoardGame() {
+        Arrays.stream(this.boardGame.getBoard()).forEach(a -> {
             Arrays.fill(a, 0);
         });
         return boardGame;
     }
 
-    public int[][] generateShips() {
+    public BoardGame generateShips() {
         resetBoardGame();
-        ships.clear();
+        boardGame.getShips().clear();
         int numberOfShips = 3;
 
         while(numberOfShips == 3) {
@@ -47,7 +48,7 @@ public class BoardGame {
             if(generateSingleShip(4))
                 numberOfShips--;
         }
-        ships.forEach(ship -> {
+        boardGame.getShips().forEach(ship -> {
             System.out.println(ship);
         });
         return boardGame;
@@ -55,7 +56,7 @@ public class BoardGame {
 
     private void saveShipToBoardGame(Ship ship) {
         ship.getCoordinates().forEach(coordinate -> {
-            this.boardGame[coordinate.getRow()][coordinate.getCol()]
+            this.boardGame.getBoard()[coordinate.getRow()][coordinate.getCol()]
                     = SquareStatus.SHIP.getValue();
         });
     }
@@ -69,7 +70,7 @@ public class BoardGame {
                 try {
                     for(int x = -1; x < 2; x++) {
                         for(int y = -1; y < 2; y++) {
-                            if(boardGame[row+x][col+i+y] != SquareStatus.SEA.getValue())
+                            if(boardGame.getBoard()[row+x][col+i+y] != SquareStatus.SEA.getValue())
                                 return false;
                         }
                     }
@@ -87,7 +88,7 @@ public class BoardGame {
                 try {
                     for(int x = -1; x < 2; x++) {
                         for(int y = -1; y < 2; y++) {
-                            if(boardGame[row+i+x][col+y] != SquareStatus.SEA.getValue())
+                            if(boardGame.getBoard()[row+i+x][col+y] != SquareStatus.SEA.getValue())
                                 return false;
                         }
                     }
@@ -100,26 +101,26 @@ public class BoardGame {
         }
         String shipType = (shipSize == 5 ? "Battleship" : "Destroyers");
         Ship ship = new Ship(coordinates, shipSize, shipType);
-        ships.add(ship);
+        boardGame.getShips().add(ship);
         saveShipToBoardGame(ship);
         return true;
     }
 
-    public int[][] hit(Coordinates coordinates) {
+    public BoardGame hit(Coordinates coordinates) {
         int row = coordinates.getRow();
         int col = coordinates.getCol();
-        if(boardGame[row][col] == SquareStatus.SHIP.getValue()) {
-            boardGame[row][col] = SquareStatus.HITTED.getValue();
+        if(boardGame.getBoard()[row][col] == SquareStatus.SHIP.getValue()) {
+            boardGame.getBoard()[row][col] = SquareStatus.HITTED.getValue();
             reduceShipSize(coordinates);
         }
-        else if(boardGame[row][col] == SquareStatus.SEA.getValue()) {
-            boardGame[row][col] = SquareStatus.MISSED.getValue();
+        else if(boardGame.getBoard()[row][col] == SquareStatus.SEA.getValue()) {
+            boardGame.getBoard()[row][col] = SquareStatus.MISSED.getValue();
         }
         return boardGame;
     }
 
     private void reduceShipSize(Coordinates coordinates) {
-        Optional<Ship> ship = ships.stream().filter(sh -> sh.getCoordinates().contains(coordinates)).findFirst();
+        Optional<Ship> ship = boardGame.getShips().stream().filter(sh -> sh.getCoordinates().contains(coordinates)).findFirst();
         ship.ifPresent(Ship::reduceShipSize);
 
         ship.ifPresent(sh -> {
