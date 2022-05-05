@@ -1,13 +1,13 @@
 package pl.miq3l.battleshipgame.model;
 
-public enum StatusEnum {
+public enum SquareStatus {
     SEA(0),
     SHIP(1),
     HITTED(2),
     MISSED(-1);
     private final int value;
 
-    StatusEnum(int value) {
+    SquareStatus(int value) {
         this.value = value;
     }
 

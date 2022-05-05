@@ -12,4 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Ship {
     private List<Coordinates> coordinates = new ArrayList<>();
+    private int size;
+    private String type;
+
+    public void reduceShipSize() {
+        this.size--;
+    }
 }

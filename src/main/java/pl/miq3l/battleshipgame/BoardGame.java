@@ -2,12 +2,9 @@ package pl.miq3l.battleshipgame;
 
 import pl.miq3l.battleshipgame.model.Coordinates;
 import pl.miq3l.battleshipgame.model.Ship;
-import pl.miq3l.battleshipgame.model.StatusEnum;
+import pl.miq3l.battleshipgame.model.SquareStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class BoardGame {
     private final int[][] boardGame;
@@ -50,18 +47,21 @@ public class BoardGame {
             if(generateSingleShip(4))
                 numberOfShips--;
         }
+        ships.forEach(ship -> {
+            System.out.println(ship);
+        });
         return boardGame;
     }
 
     private void saveShipToBoardGame(Ship ship) {
         ship.getCoordinates().forEach(coordinate -> {
             this.boardGame[coordinate.getRow()][coordinate.getCol()]
-                    = StatusEnum.SHIP.getValue();
+                    = SquareStatus.SHIP.getValue();
         });
     }
 
     public boolean generateSingleShip(int shipSize) {
-        Ship ship = new Ship();
+        List<Coordinates> coordinates = new ArrayList<>();
         if(new Random().nextBoolean()) {    // HORIZONTAL SHIP
             int col = new Random().nextInt(BOARDSIZE / 2);
             int row = new Random().nextInt(BOARDSIZE);
@@ -69,7 +69,7 @@ public class BoardGame {
                 try {
                     for(int x = -1; x < 2; x++) {
                         for(int y = -1; y < 2; y++) {
-                            if(boardGame[row+x][col+i+y] != StatusEnum.SEA.getValue())
+                            if(boardGame[row+x][col+i+y] != SquareStatus.SEA.getValue())
                                 return false;
                         }
                     }
@@ -77,7 +77,7 @@ public class BoardGame {
                 catch (Exception e) {
                     return false;
                 }
-                ship.getCoordinates().add(new Coordinates(row, col+i));
+                coordinates.add(new Coordinates(row, col+i));
             }
         }
         else {  // VERTICAL SHIP
@@ -87,7 +87,7 @@ public class BoardGame {
                 try {
                     for(int x = -1; x < 2; x++) {
                         for(int y = -1; y < 2; y++) {
-                            if(boardGame[row+i+x][col+y] != StatusEnum.SEA.getValue())
+                            if(boardGame[row+i+x][col+y] != SquareStatus.SEA.getValue())
                                 return false;
                         }
                     }
@@ -95,9 +95,11 @@ public class BoardGame {
                 catch (Exception e) {
                     return false;
                 }
-                ship.getCoordinates().add(new Coordinates(row+i, col));
+                coordinates.add(new Coordinates(row+i, col));
             }
         }
+        String shipType = (shipSize == 5 ? "Battleship" : "Destroyers");
+        Ship ship = new Ship(coordinates, shipSize, shipType);
         ships.add(ship);
         saveShipToBoardGame(ship);
         return true;
@@ -106,12 +108,24 @@ public class BoardGame {
     public int[][] hit(Coordinates coordinates) {
         int row = coordinates.getRow();
         int col = coordinates.getCol();
-        if(boardGame[row][col] == 1) {
-            boardGame[row][col] = StatusEnum.HITTED.getValue();
+        if(boardGame[row][col] == SquareStatus.SHIP.getValue()) {
+            boardGame[row][col] = SquareStatus.HITTED.getValue();
+            reduceShipSize(coordinates);
         }
-        else if(boardGame[row][col] == 0) {
-            boardGame[row][col] = StatusEnum.MISSED.getValue();
+        else if(boardGame[row][col] == SquareStatus.SEA.getValue()) {
+            boardGame[row][col] = SquareStatus.MISSED.getValue();
         }
         return boardGame;
+    }
+
+    private void reduceShipSize(Coordinates coordinates) {
+        Optional<Ship> ship = ships.stream().filter(sh -> sh.getCoordinates().contains(coordinates)).findFirst();
+        ship.ifPresent(Ship::reduceShipSize);
+
+        ship.ifPresent(sh -> {
+            if(sh.getSize() == 0) { // if ship has sinked
+                System.out.println("Ship has sinked");
+            }
+        });
     }
 }
