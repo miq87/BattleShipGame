@@ -19,7 +19,7 @@ public class BattleShipGameApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("http://localhost:4200", "https://klg.miq3l.pl")
                         .allowedMethods("GET", "PUT", "PATCH", "DELETE", "POST");
             }
         };
