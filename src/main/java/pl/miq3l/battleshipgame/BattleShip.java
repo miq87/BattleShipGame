@@ -32,6 +32,7 @@ public class BattleShip {
         Arrays.stream(this.boardGame.getBoard()).forEach(a -> {
             Arrays.fill(a, 0);
         });
+        boardGame.setMessage("The board has been cleared.");
         return boardGame;
     }
 
@@ -48,9 +49,7 @@ public class BattleShip {
             if(generateSingleShip(4))
                 numberOfShips--;
         }
-        boardGame.getShips().forEach(ship -> {
-            System.out.println(ship);
-        });
+        boardGame.setMessage("New ships created on the board.");
         return boardGame;
     }
 
@@ -115,18 +114,29 @@ public class BattleShip {
         }
         else if(boardGame.getBoard()[row][col] == SquareStatus.SEA.getValue()) {
             boardGame.getBoard()[row][col] = SquareStatus.MISSED.getValue();
+            boardGame.setMessage("You missed! :( Try again!");
         }
         return boardGame;
     }
 
     private void reduceShipSize(Coordinates coordinates) {
-        Optional<Ship> ship = boardGame.getShips().stream().filter(sh -> sh.getCoordinates().contains(coordinates)).findFirst();
+        Optional<Ship> ship = getShipByCoordinates(coordinates);
         ship.ifPresent(Ship::reduceShipSize);
 
         ship.ifPresent(sh -> {
             if(sh.getSize() == 0) { // if ship has sinked
-                System.out.println("Ship has sinked");
+                boardGame.setMessage("Congratulations! Hit and sink! :)");
+                boardGame.getShips().remove(sh); // remove itself from ships list
+            }
+            else {
+                boardGame.setMessage("Super! Hitted! :)");
             }
         });
     }
+
+    private Optional<Ship> getShipByCoordinates(Coordinates coordinates) {
+        return boardGame.getShips().stream()
+                .filter(sh -> sh.getCoordinates().contains(coordinates)).findFirst();
+    }
+
 }

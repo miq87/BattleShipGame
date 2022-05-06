@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class BoardGame {
     private int[][] board;
-    private String message;
+    private String message = "The game has started!";
     private final List<Ship> ships = new ArrayList<>();
 
     public BoardGame(int boardSize) {
