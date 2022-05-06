@@ -13,7 +13,7 @@ public class BattleShip {
     private static BattleShip INSTANCE;
     private static final int BOARDSIZE = 10;
 
-    public BoardGame getBoardGame() {
+    public BoardGame get() {
         return boardGame;
     }
 
@@ -28,17 +28,8 @@ public class BattleShip {
         this.boardGame = new BoardGame(BOARDSIZE);
     }
 
-    public BoardGame resetBoardGame() {
-        Arrays.stream(this.boardGame.getBoard()).forEach(a -> {
-            Arrays.fill(a, 0);
-        });
-        boardGame.setMessage("The board has been cleared.");
-        return boardGame;
-    }
-
     public BoardGame generateShips() {
-        resetBoardGame();
-        boardGame.getShips().clear();
+        boardGame.reset();
         int numberOfShips = 3;
 
         while(numberOfShips == 3) {
@@ -132,6 +123,13 @@ public class BattleShip {
                 boardGame.setMessage("Super! Hitted! :)");
             }
         });
+        checkIsGameFinished();
+    }
+
+    private void checkIsGameFinished() {
+        if(boardGame.getShips().size() == 0) {
+            boardGame.setMessage("Congratulations! All the ships have sunk!");
+        }
     }
 
     private Optional<Ship> getShipByCoordinates(Coordinates coordinates) {

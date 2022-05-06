@@ -14,15 +14,11 @@ public class BattleShipService {
         this.battleShip = BattleShip.getInstance();
     }
 
-    public BoardGame getBoardGame() {
-        return battleShip.getBoardGame();
+    public BoardGame get() {
+        return battleShip.get();
     }
 
-    public BoardGame resetBoardGame() {
-        return battleShip.resetBoardGame();
-    }
-
-    public BoardGame generateShips() {
+    public BoardGame create() {
         return battleShip.generateShips();
     }
 

@@ -18,18 +18,13 @@ public class BattleShipApi {
     }
 
     @GetMapping
-    public BoardGame getBoardGame() {
-        return boardGameService.getBoardGame();
+    public BoardGame get() {
+        return boardGameService.get();
     }
 
-    @GetMapping("/reset")
-    public BoardGame resetBoardGame() {
-        return boardGameService.resetBoardGame();
-    }
-
-    @GetMapping("/generate")
-    public BoardGame generateShips() {
-        return boardGameService.generateShips();
+    @GetMapping("/create")
+    public BoardGame create() {
+        return boardGameService.create();
     }
 
     @PostMapping("/hit")
